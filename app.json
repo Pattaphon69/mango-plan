@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Mango Planning",
+    "slug": "Planning",
+    "scheme": "mangoplan",
+    "version": "2.0.8",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#07a063"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": false
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.mangoconsultant.planning",
+      "supportsTablet": true,
+      "requireFullScreen": true,
+      "buildNumber": "2.0.8",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera for take photo of work progress",
+        "NSPhotoLibraryUsageDescription": "This app requires access to camera and images for check work progress",
+        "NSLocationWhenInUseUsageDescription": "This app uses the location for check the pickup location",
+        "NSFaceIDUsageDescription": "This app will optionally use Face ID or Touch ID to save login"
+    
+      }
+    },
+    "android": {
+      "package": "com.mangoconsultant.mango.plan",
+      "versionCode": 14,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "CAMERA",
+        "LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA_ROLL",
+        "READ_INTERNAL_STORAGE",
+        "RECORD_AUDIO",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ]
+    }
+  }
+}
