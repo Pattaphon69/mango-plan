@@ -79,7 +79,7 @@ export default function Home({ route, navigation }) {
     return (
       <View>
         <View style={[styles.blockcard, {}]}>
-          <TouchableOpacity style={{ width: '100%' }}>
+          <TouchableOpacity onPress={() => navigation.navigate("Planlist")} style={{ width: '100%' }}>
             <View style={{ width: "100%", height: 150, backgroundColor: colors.grey, }}>
               {!$xt.isEmpty(item.uriImg) ?
                 <Image

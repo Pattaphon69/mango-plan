@@ -58,7 +58,7 @@ import Home from "./src/home";
 import Setting from "./src/setting/setting";
 import HeaderRight from "./src/components/headerRight";
 import HeaderLeft from "./src/components/headerLeft";
-
+import Planlist from "./src/planist";
 ////// signature ////////////
 
 const Stack = createStackNavigator();
@@ -328,6 +328,15 @@ export default function App({ navigation }) {
               component={Setting}
               options={{
                 title: '',
+                headerRight: "",
+                // headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="Planlist"
+              component={Planlist}
+              options={{
+                title: 'Plans list',
                 headerRight: "",
                 // headerShown: false
               }}
