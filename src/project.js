@@ -14,7 +14,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import $xt from "./api/xtools";
 import { colors, styles } from "./stylesheet/styles";
 
-
 import MessageBox from "./api/msg";
 import Layout from "./template/layout";
 import HeaderRight from "./components/headerRight";
