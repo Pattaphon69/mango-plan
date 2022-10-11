@@ -30,7 +30,7 @@ import Usertype from "./src/auth/usertype"
 import Passcode from "./src/auth/passcode";
 import Login from "./src/auth/login";
 import PinCode from "./src/auth/pincode";
-import Home from "./src/home";
+import Project from "./src/project";
 import Setting from "./src/setting/setting";
 import HeaderRight from "./src/components/headerRight";
 import HeaderLeft from "./src/components/headerLeft";
@@ -59,7 +59,7 @@ export default function App({ navigation }) {
         let project_list = await AsyncStorage.getItem("project_list") || "";
         console.log("check authen...", project_list);
 
-        setInitialScreen("Usertype");
+        setInitialScreen("Project");
         await getPermissionAsync();
         console.log("get location...");
         setReady(true);
@@ -192,8 +192,8 @@ export default function App({ navigation }) {
               }}
             />
             <Stack.Screen
-              name="Home"
-              component={Home}
+              name="Project"
+              component={Project}
               options={{
                 title: 'Project',
                 headerLeft: "",

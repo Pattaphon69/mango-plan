@@ -23,7 +23,7 @@ import { colors } from "../stylesheet/styles";
 import Layout from "../template/layout";
 import { AppInfoService } from "../services/app-info.service";
 
-import {xt,getDataStorage,setDataStorage} from '../api/service'
+import { xt, getDataStorage, setDataStorage } from '../api/service'
 
 export default function Usertype({ navigation }) {
   const [result, setResult] = useState(null);
@@ -38,18 +38,18 @@ export default function Usertype({ navigation }) {
       init();
     }, [])
   );
-  const  getLangDF = async() => {
+  const getLangDF = async () => {
     let lang_ = await xt.getLang();
     setLang(lang_);
   }
-  const requestImagePickerPermissions = async() => {
+  const requestImagePickerPermissions = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       xt.Alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
   };
-  const requestLocationPermissions = async() => {
+  const requestLocationPermissions = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       xt.Alert('Permission to access location was denied');
@@ -57,7 +57,7 @@ export default function Usertype({ navigation }) {
     }
   };
 
-  const requestCameraPermissions = async() => {
+  const requestCameraPermissions = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       xt.Alert('Permission to access Camera was denied');
@@ -65,7 +65,7 @@ export default function Usertype({ navigation }) {
     }
   };
   const init = async () => {
-    try{
+    try {
       const check = await checkVersion({
         version: AppInfoService.getVersion(), // app local version
         iosStoreURL: 'https://apps.apple.com/us/app/mango-plan/id1528038762',
@@ -73,7 +73,7 @@ export default function Usertype({ navigation }) {
         country: 'jp' // default value is 'jp'
       });
       console.log("check", check);
-      if(check.result === "new"){
+      if (check.result === "new") {
         let day1 = await getDataStorage("checkVersion") || "";
         let day2 = moment(new Date()).format("YYMD");
         // if(parseInt(day2) > parseInt(day1)){
@@ -81,7 +81,7 @@ export default function Usertype({ navigation }) {
         // }
         navigation && navigation.navigate('Version');
       }
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
   };
@@ -108,7 +108,7 @@ export default function Usertype({ navigation }) {
   const onGotoLogin = async (usertype) => {
     try {
       await AsyncStorage.setItem("usertype", usertype);
-      navigation.navigate("Login");
+      navigation.navigate("Project");
     } catch (e) {
       // saving error
     }
@@ -116,7 +116,7 @@ export default function Usertype({ navigation }) {
   const selectUser = () => {
     return (
       <View>
-        <View style={[styles.rows, {flex: 1}]}>
+        <View style={[styles.rows, { flex: 1 }]}>
           <Ripple
             rippleColor="#fff"
             rippleOpacity={0.87}
@@ -138,7 +138,7 @@ export default function Usertype({ navigation }) {
             onPress={() => onGotoLogin("Outsource")}
             style={styles.buttonLogin}
           >
-            <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text style={[styles.buttonLoginText]}>Outsource Signin</Text>
               <View style={styles.arow}>
                 <MaterialIcons name="navigate-next" size={24} color="#000" />
