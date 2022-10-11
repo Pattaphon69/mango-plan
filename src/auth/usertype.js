@@ -8,17 +8,83 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { MaterialIcons, AntDesign, EvilIcons } from "@expo/vector-icons";
 import Ripple from "react-native-material-ripple";
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { StatusBar } from "expo-status-bar";
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+import { Camera } from 'expo-camera';
+import checkVersion from 'react-native-store-version';
+import moment from 'moment';
 import * as WebBrowser from "expo-web-browser";
+
 import { colors } from "../stylesheet/styles";
 import Layout from "../template/layout";
+import { AppInfoService } from "../services/app-info.service";
+
+import {xt,getDataStorage,setDataStorage} from '../api/service'
 
 export default function Usertype({ navigation }) {
   const [result, setResult] = useState(null);
+  const [lang, setLang] = React.useState({});
 
+  useFocusEffect(
+    React.useCallback(() => {
+      getLangDF();
+      requestImagePickerPermissions();
+      requestLocationPermissions();
+      requestCameraPermissions();
+      init();
+    }, [])
+  );
+  const  getLangDF = async() => {
+    let lang_ = await xt.getLang();
+    setLang(lang_);
+  }
+  const requestImagePickerPermissions = async() => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      xt.Alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+  };
+  const requestLocationPermissions = async() => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      xt.Alert('Permission to access location was denied');
+      return;
+    }
+  };
+
+  const requestCameraPermissions = async() => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      xt.Alert('Permission to access Camera was denied');
+      return;
+    }
+  };
+  const init = async () => {
+    try{
+      const check = await checkVersion({
+        version: AppInfoService.getVersion(), // app local version
+        iosStoreURL: 'https://apps.apple.com/us/app/mango-plan/id1528038762',
+        androidStoreURL: 'https://play.google.com/store/apps/details?id=com.mangoconsultant.mango.plan',
+        country: 'jp' // default value is 'jp'
+      });
+      console.log("check", check);
+      if(check.result === "new"){
+        let day1 = await getDataStorage("checkVersion") || "";
+        let day2 = moment(new Date()).format("YYMD");
+        // if(parseInt(day2) > parseInt(day1)){
+        //   navigation && navigation.navigate('Version');
+        // }
+        navigation && navigation.navigate('Version');
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  };
   const onYoutube = async () => {
     let result = await WebBrowser.openBrowserAsync(
       "https://www.youtube.com/channel/UCy--05IjGjmJh8N-VTYcbxA"
