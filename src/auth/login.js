@@ -2,33 +2,18 @@ import React, { useEffect, useState, useMemo } from "react";
 import {
   Text,
   TextInput,
-  Platform,
   View,
   Image,
-  Animated,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard,
   StyleSheet,
 } from "react-native";
-import {
-  FontAwesome5,
-  Foundation,
-  FontAwesome,
-  Ionicons,
-} from "@expo/vector-icons";
-import { MaterialIcons, AntDesign, EvilIcons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialIcons, AntDesign, EvilIcons, Feather, Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import checkVersion from "react-native-store-version";
 import { useFocusEffect } from "@react-navigation/native";
-import DropDownPicker from "react-native-dropdown-picker";
-import Ripple from "react-native-material-ripple";
 import linq from "js-linq";
 import { colors } from "../stylesheet/styles";
-import OverLayout from "../template/OverLayout";
-import LoaddingLayout from "../template/loadding_layout";
-import MessageBox from "../api/msg";
-import { apiPasscode, apiAuth } from "../api/authentication";
-import { $xt, getDataStorage, setDataStorage } from "../api/xtools";
+import { xt, getDataStorage, setDataStorage } from "../api/service";
+import { AppInfoService } from "../services/app-info.service";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Login({ navigation, route }) {
@@ -60,7 +45,7 @@ export default function Login({ navigation, route }) {
   const onSiteitem = (wh) => {
     if (wh == "Site") {
       if (xt.isEmpty(passcode)) {
-        $xt.Alert("Please enter customer code and Submit the connect");
+        xt.Alert("Please enter customer code and Submit the connect");
         return;
       }
       navigation &&
@@ -82,9 +67,9 @@ export default function Login({ navigation, route }) {
   const onLogin = async (faceid_wh, login_param) => {
     if (
       !faceid_wh &&
-      (xt.isEmpty(companyvalue) || $xt.isEmpty(username) || $xt.isEmpty(password))
+      (xt.isEmpty(companyvalue) || xt.isEmpty(username) || xt.isEmpty(password))
     ) {
-      $xt.Alert(lang.please_login);
+      xt.Alert(lang.please_login);
       return;
     }
     setLoadding(true);
@@ -150,17 +135,17 @@ export default function Login({ navigation, route }) {
           }
           setLoadding(false);
           navigation &&
-            navigation.navigate("Project", {
+            navigation.navigate("Home", {
               site: sitevalue,
             });
         } else {
           setLoadding(false);
-          $xt.Alert(res.error);
+          xt.Alert(res.error);
         }
       })
       .catch((err) => {
         setLoadding(false);
-        $xt.Alert(err.response);
+        xt.Alert(err.response);
       });
   };
 
@@ -199,7 +184,9 @@ export default function Login({ navigation, route }) {
   const LoadingIndicator = (props) => <Spinner status="control" size="small" />;
 
   const getLangDF = async () => {
-    let lang_ = await $xt.getLang();
+
+    let lang_ = await xt.getLang();
+    console.log("ggg");
     setLang(lang_);
     let usertype_key = (await getDataStorage("usertype")) || "";
     let pincode_key = await getDataStorage("pincode_ppn");
@@ -259,7 +246,19 @@ export default function Login({ navigation, route }) {
       _beforeNext();
     }
   };
+  const onFacebook = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      "https://web.facebook.com/mangoconsultant/?hc_ref=ARQvOtJGF71GOw1Hkl0__bbBoUq8KjR7_OTtbf12pCR5boOFDJA_h_Je-d1XblY2epw&fref=nf&__xts__[0]=68.ARAxeMY7IrjhGAsDxGDGaFnvQikxH9oEcoRmPKKt9OYpGTl7ekhWCQ1HX7w136sTiqr09b_IluiowQkSEjr4qVxR1MJquatTJKnNfMsktUmZX_a196U5KMDFzgP26wNlrwUYfQ5dnDQImiSYcdRtYd3n-_z-pJZH_CbHWaA44Xfx8FH5jQoRzmBogAAaNnkyl-s47W3Xc8sN5pd7KANiNeVP39er-uL_FUaFiW3ou5MrS9v0Zfw_5urVLrkQIoFGO6fZ2nIapK222IX7VhCJvZIQA1tqZBKWu6cr2TgBH3HGwim4LduAGn0266Ihgv1QFe2e5Z-EbSlZRN2jY-RrFp8xpw&__tn__=kC-R"
+    );
+    setResult(result);
+  };
 
+  const onInstargram = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      "https://www.instagram.com/mangoconsultant/"
+    );
+    setResult(result);
+  };
   const _beforeNext = async () => {
     var username_ = await getDataStorage("username_key");
     var password_ = await getDataStorage("password_key");
@@ -280,268 +279,266 @@ export default function Login({ navigation, route }) {
     }, [])
   );
   return (
-    <KeyboardAvoidingView>
-      <View style={styles.container}>
-        <View style={styles.signInContainer}>
-          <TouchableOpacity
-            style={styles.signUpButton}
-            onPress={onUsertypeButtonPress}
-          >
-            <Text>{lang.back}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formContainer}>
+    // <KeyboardAvoidingView>
+    <View style={styles.container}>
+      <View style={styles.signInContainer}>
+        <TouchableOpacity
+          style={styles.signUpButton}
+          onPress={onUsertypeButtonPress}
+        >
+          <Text>{lang.back}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.formContainer}>
+        <View style={{}}>
+          <View style={styles.divider}></View>
+          <Text>{passcode ? lang.passcode : ""}</Text>
           <View style={styles.messageInputContainer}>
             <TextInput
               style={{
-                backgroundColor: "rgba(52, 52, 52, 0)",
                 color: "#000",
                 borderColor: "rgba(52, 52, 52, 0)",
                 width: "70%",
+
               }}
               placeholder={lang.passcode}
-              label={passcode ? lang.passcode : true}
-              status="basic"
-              size="Medium"
               value={passcode}
               onChangeText={setPasscode}
             />
-
             <TouchableOpacity
               style={{
                 width: 100,
                 height: 30,
                 padding: 0,
-                backgroundColor: "#8F9BB3",
+                backgroundColor: colors.color_basic_500,
                 borderColor: "#8F9BB3",
-                alignItems: "flex-end",
+                alignItems: "center",
+                justifyContent: 'center',
                 borderRadius: 50,
               }}
               onPress={() => onSiteitem("Site")}
             >
-              <Text>{lang.connect}</Text>
+              <Text style={{ color: colors.white }}>{lang.connect}</Text>
             </TouchableOpacity>
           </View>
+        </View>
 
 
-          {companyvalue ? (
-            <>
-              <TextInput
-                style={{
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  color: "#000",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                  paddingBottom: 5,
-                }}
-                placeholder={lang.selectsite}
-                label={site ? lang.selectsite : true}
-                value={site}
-                onChangeText={setSite}
-              />
-
-              <TouchableOpacity
-                style={{
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
-                  marginTop: -55,
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                }}
-                status="control"
-                size="Medium"
-                onPress={() => onSiteitem("Site")}
-              >
-              </TouchableOpacity>
-
-
-              <TextInput
-                style={{
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  color: "#000",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                  paddingBottom: 5,
-                }}
-                placeholder={lang.selectcoppany}
-                label={company ? lang.selectcoppany : true}
-
-                value={company}
-                onChangeText={setCompany}
-              />
-
-              <TouchableOpacity
-                style={{
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
-                  borderRadius: 50,
-                  marginTop: -52,
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                }}
-                status="control"
-                size="Medium"
-                onPress={() => onSiteitem("Company")}
-              >
-              </TouchableOpacity>
-
-
-              <TextInput
-                style={{
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  color: "#000",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                }}
-                placeholder={lang.username}
-                label={username ? lang.username : true}
-
-                value={username}
-                onChangeText={setUsername}
-              />
-
-
-
-              <TextInput
-                style={{
-                  backgroundColor: "rgba(52, 52, 52, 0)",
-                  color: "#000",
-                  borderColor: "rgba(52, 52, 52, 0)",
-                }}
-                placeholder={lang.password}
-                label={password ? lang.password : true}
-                value={password}
-                onChangeText={setPassword}
-              />
-
-
-              <TouchableOpacity
-                style={styles.signin}
-                status="success"
-                size="large"
-                disabled={loadding ? true : false}
-                accessoryRight={loadding ? LoadingIndicator : null}
-                onPress={() => onLogin(false, {})}
-              >
-                <Text>{lang.signIn}</Text>
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+        {companyvalue ? (
+          <>
+            <View style={{}}>
+              <View style={styles.divider}></View>
+              <Text>{site ? lang.selectsite : ""}</Text>
+              <View style={styles.messageInputContainer}>
+                <TextInput
+                  placeholder={lang.selectsite}
+                  value={site}
+                  onChangeText={setSite}
+                />
                 <TouchableOpacity
-                  style={{ display: faceid ? "flex" : "none" }}
-                  onPress={() => onMgAuthentication(lang)}
+                  onPress={() => onSiteitem("Site")}
                 >
-                  <View
-                    style={{
-                      marginTop: 20,
-                      marginRight: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Image
-                      size="large"
-                      shape="rounded"
-                      source={require("../../assets/images/icons8-face-id-96.png")}
-                    />
-                  </View>
-                  <View
-                    level="1"
-                    style={{
-                      marginTop: 0,
-                      marginLeft: 0,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Face ID</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{ display: faceid ? "flex" : "none" }}
-                  onPress={() => onMgAuthentication(lang)}
-                >
-                  <View
-                    level="2"
-                    style={{
-                      marginTop: 20,
-                      marginLeft: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Image
-                      size="large"
-                      shape="rounded"
-                      source={require("../../assets/images/icons8-touch-id-64.png")}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: 0,
-                      marginLeft: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Touch ID </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: pincodeppn ? "flex" : "none",
-                  }}
-                  onPress={() => onPincode()}
-                >
-                  <View
-                    style={{
-                      marginTop: 20,
-                      marginLeft: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Image
-                      size="large"
-                      shape="rounded"
-                      source={require("../../assets/images/icons8-pin-code-100.png")}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: 0,
-                      marginLeft: 10,
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text appearance="hint" category="c2">Pin Code </Text>
-                  </View>
+                  <Feather name="chevron-right" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-            </>
-          ) : null}
-        </View>
+            </View>
+            <View style={{}}>
+              <View style={styles.divider}></View>
+              <Text>{company ? lang.selectcoppany : ""}</Text>
+              <View style={styles.messageInputContainer}>
+                <TextInput
+                  style={{
+                    backgroundColor: "rgba(52, 52, 52, 0)",
+                    color: "#000",
+                    borderColor: "rgba(52, 52, 52, 0)",
+                    paddingBottom: 5,
+                  }}
+                  placeholder={lang.selectcoppany}
+                  value={company}
+                  onChangeText={setCompany}
+                />
+                <TouchableOpacity
+                  style={{
+                    // alignItems: "flex-start",
+                    // justifyContent: "flex-start",
+                    // marginTop: -55,
+                    // backgroundColor: "rgba(52, 52, 52, 0)",
+                    // borderColor: "rgba(52, 52, 52, 0)",
+                  }}
+                  onPress={() => onSiteitem("Site")}
+                >
+                  <Feather name="chevron-right" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{}}>
+              <View style={styles.divider}></View>
+              <View style={styles.messageInputContainer}>
+                <TextInput
+                  style={{
+                    backgroundColor: "rgba(52, 52, 52, 0)",
+                    color: "#000",
+                    borderColor: "rgba(52, 52, 52, 0)",
+                    paddingBottom: 5,
+                  }}
+                  placeholder={lang.username}
+                  value={username}
+                  onChangeText={setUsername}
+                />
+                <View style={{ marginRight: 5 }}>
+                  <FontAwesome5 name="user-alt" size={15} color="black" />
+                </View>
 
-        <View style={styles.socialStyle}>
-          <TouchableOpacity onPress={() => onYoutube()}>
-            <MaterialIcons name="live-tv" size={24} color={colors.color_danger_500} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onFacebook()}>
-            <EvilIcons name="sc-facebook" size={26} color={colors.color_info_500} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onInstargram()}>
-            <AntDesign name="camera" size={24} color={colors.color_success_500} />
-          </TouchableOpacity>
-        </View>
+              </View>
+            </View>
+            <View style={{}}>
+              <View style={styles.divider}></View>
+              <View style={styles.messageInputContainer}>
+                <TextInput
+                  style={{
+                    backgroundColor: "rgba(52, 52, 52, 0)",
+                    color: "#000",
+                    borderColor: "rgba(52, 52, 52, 0)",
+                    paddingBottom: 5,
+                  }}
+                  placeholder={lang.password}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                  <View style={{ marginRight: 5 }}>
+                  <Ionicons name="eye-off" size={18} color="black" />
+                </View>
+              </View>
+            </View>
+            <View style={styles.divider}></View>
+            <TouchableOpacity
+              style={styles.signin}
+              disabled={loadding ? true : false}
+              onPress={() => onLogin(false, {})}
+            >
+              {/* <Text>{lang.signIn}</Text> */}
+              <Text style={{ color: colors.white, textAlign: 'center' }}>{lang.signIn}</Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{ display: faceid ? "flex" : "none" }}
+                onPress={() => onMgAuthentication(lang)}
+              >
+                <View
+                  style={{
+                    marginTop: 20,
+                    marginRight: 10,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Image
+                    size="large"
+                    shape="rounded"
+                    source={require("../../assets/images/icons8-face-id-96.png")}
+                  />
+                </View>
+                <View
+                  level="1"
+                  style={{
+                    marginTop: 0,
+                    marginLeft: 0,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text>Face ID</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ display: faceid ? "flex" : "none" }}
+                onPress={() => onMgAuthentication(lang)}
+              >
+                <View
+                  level="2"
+                  style={{
+                    marginTop: 20,
+                    marginLeft: 10,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Image
+                    size="large"
+                    shape="rounded"
+                    source={require("../../assets/images/icons8-touch-id-64.png")}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginTop: 0,
+                    marginLeft: 10,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text>Touch ID </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: pincodeppn ? "flex" : "none",
+                }}
+                onPress={() => onPincode()}
+              >
+                <View
+                  style={{
+                    marginTop: 20,
+                    marginLeft: 10,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Image
+                    size="large"
+                    shape="rounded"
+                    source={require("../../assets/images/icons8-pin-code-100.png")}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginTop: 0,
+                    marginLeft: 10,
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text appearance="hint" category="c2">Pin Code </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : null}
       </View>
-    </KeyboardAvoidingView>
+
+      <View style={styles.socialStyle}>
+        <TouchableOpacity onPress={() => onYoutube()}>
+          <MaterialIcons name="live-tv" size={24} color={colors.color_danger_500} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onFacebook()}>
+          <EvilIcons name="sc-facebook" size={26} color={colors.color_info_500} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onInstargram()}>
+          <AntDesign name="camera" size={24} color={colors.color_success_500} />
+        </TouchableOpacity>
+      </View>
+    </View>
+    // </KeyboardAvoidingView>
 
   );
 }
@@ -614,6 +611,7 @@ const styles = StyleSheet.create({
   },
   signin: {
     marginTop: 20,
+    padding: 10,
     borderRadius: 50,
     backgroundColor: "#8F9BB3",
     borderColor: "#8F9BB3",
@@ -634,7 +632,8 @@ const styles = StyleSheet.create({
   },
   messageInputContainer: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
+    justifyContent: 'space-between',
     paddingHorizontal: 0,
     paddingVertical: 5,
     marginLeft: 2,
@@ -658,5 +657,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: 'flex-end',
     marginTop: 40,
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: colors.color_basic_400,
+    marginBottom: 5
   },
 });

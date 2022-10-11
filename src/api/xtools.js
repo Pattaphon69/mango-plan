@@ -23,7 +23,7 @@ let $xt = {
     // axioscustom2.defaults.headers.common["X-API-Auth"] = "Y";
     return axioscustom2;
   },
-  
+
   async getServer(url) {
     let axioscustom2 = await $xt.axiosMangoCreate();
     let error = null;
@@ -59,7 +59,7 @@ let $xt = {
   },
   hideSymbol(x) {
     if (isNaN(parseFloat(x))) return 0;
-   let hs = x.replace(/[- #*;,<>\{\}\[\]\\\/]/gi, '')
+    let hs = x.replace(/[- #*;,<>\{\}\[\]\\\/]/gi, '')
     return hs;
   },
   formatNumber(x, n) {
@@ -108,12 +108,13 @@ let $xt = {
   async getBaseUrl() {
     return (await AsyncStorage.getItem("baseUrl")) || "";
   },
-  async getLang(){
+  async getLang() {
+    console.log("getLang");
     let lang_ = await getDataStorage("language_ppn") || "EN";
-    let lang_wh = (lang_ == "TH")?"TH":"EN"
+    let lang_wh = (lang_ == "TH") ? "TH" : "EN"
     return lang[lang_wh];
   },
-  Alert(message){
+  Alert(message) {
     Alert.alert(
       '',
       JSON.stringify(message),
@@ -126,17 +127,4 @@ let $xt = {
     );
   },
 };
-export const getDataStorage = async (key) => {
-  return  await AsyncStorage.getItem(key)
-}
-
-export const setDataStorage = async (key,value) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-    return true;
-  } catch (e) {
-    return false;
-    // saving error
-  }
-}
 export default $xt;

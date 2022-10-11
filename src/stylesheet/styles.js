@@ -32,21 +32,22 @@ export const colors = {
   color_primary_800: "#192f9e",
   color_primary_900: "#14236e",
   background_basic_color_1: "#f7f8fa",
-    /* Basic colors - for backgrounds and borders and texts */
+  /* Basic colors - for backgrounds and borders and texts */
 
-    color_basic_100: "white",
-    color_basic_200: "#f7f8fa",
-    color_basic_300: "#edf0f4",
-    color_basic_400: "#dde1eb",
-    // ...
-    color_basic_1100: "#131729",
-    color_success_500: "#00E096",
-    color_info_500: "#0095FF",
-    color_danger_500: "#FF3D71",
+  color_basic_100: "white",
+  color_basic_200: "#f7f8fa",
+  color_basic_300: "#edf0f4",
+  color_basic_400: "#dde1eb",
+  color_basic_500: "#8F9BB3",
+  // ...
+  color_basic_1100: "#131729",
+  color_success_500: "#00E096",
+  color_info_500: "#0095FF",
+  color_danger_500: "#FF3D71",
 };
 const windowWidth = Dimensions.get('window').width;
 const widthScreen = 767
-console.log("windowWidth", windowWidth);
+// console.log("windowWidth", windowWidth);
 export const smallText = 14;
 export const fontSize = {
   small: 10,
@@ -485,10 +486,9 @@ export const styles = StyleSheet.create({
     elevation: 5,
   },
   divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "70%",
-    marginBottom: 10,
+    width: '100%',
+    height: 1,
+    backgroundColor: colors.color_basic_400
   },
   dividerLine: {
     // flex: 1,
