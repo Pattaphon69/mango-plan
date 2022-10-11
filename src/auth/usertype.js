@@ -42,7 +42,7 @@ export default function Usertype({ navigation }) {
   const onGotoLogin = async (usertype) => {
     try {
       await AsyncStorage.setItem("usertype", usertype);
-      navigation.navigate("Login");
+      navigation.navigate("Home");
     } catch (e) {
       // saving error
     }
@@ -50,7 +50,7 @@ export default function Usertype({ navigation }) {
   const selectUser = () => {
     return (
       <View>
-        <View style={[styles.rows, {flex: 1}]}>
+        <View style={[styles.rows, { flex: 1 }]}>
           <Ripple
             rippleColor="#fff"
             rippleOpacity={0.87}
@@ -72,7 +72,7 @@ export default function Usertype({ navigation }) {
             onPress={() => onGotoLogin("Outsource")}
             style={styles.buttonLogin}
           >
-            <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text style={[styles.buttonLoginText]}>Outsource Signin</Text>
               <View style={styles.arow}>
                 <MaterialIcons name="navigate-next" size={24} color="#000" />
